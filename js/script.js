@@ -10,40 +10,41 @@ const word = 'Magnolia';
 const guessedLetters = [];
 
 
+//  ------------------- My Way which broke the code when trying to change the dots for the guesses -------------------
+// // create a function to change word to dots
+// const hiddenLetters = function() {
 
-// create a function to change word to dots
-const hiddenLetters = function() {
-
-    // create array of the word
-    const wordArray = word.split('');
+//     // create array of the word
+//     const wordArray = word.split('');
     
-    // for each function to cycle through the new array
-    wordArray.forEach(function (letter) {
-        // replace each letter and append to correct paragraph
-        const single = letter.replace(letter,'●');
-        wordProgress.append(single);
+//     // for each function to cycle through the new array
+//     wordArray.forEach(function (letter) {
+//         // replace each letter and append to correct paragraph
+//         const single = letter.replace(letter,'●');
+//         wordProgress.append(single);
         
-    })
+//     })
 
-    // take the earlier array and put it back into a string
-    const restitch = wordArray.join('')
+//     // take the earlier array and put it back into a string
+//     const restitch = wordArray.join('')
     
-}
+// }
+// ---------------------End of my way ------------------------
 // --------------------- Skillcrush way ------------------------
-// const placeholder = function (word) {
-//     const placeholderLetters = [];
-//     for (const letter of word) {
-//       console.log(letter);
-//       placeholderLetters.push("●");
-//     }
-//     wordProgress.innerText = placeholderLetters.join("");
-//   };
+const placeholder = function (word) {
+    const placeholderLetters = [];
+    for (const letter of word) {
+      console.log(letter);
+      placeholderLetters.push("●");
+    }
+    wordProgress.innerText = placeholderLetters.join("");
+  };
 
 
 // --------------------End of Skillcrush way -------------------
 
 // call function with the word as the parameter
-hiddenLetters(word)
+placeholder(word)
 
 
 // create event listener for guess! button
@@ -96,8 +97,49 @@ const makeGuess = function (guess) {
     } else {
         // then push to array if all good
         guessedLetters.push(guess);
-        console.log(guessedLetters)
+        showGuesses();
+        revealLetters(guessedLetters);
     }
-     
-}
+};
 
+
+//  function to show the guessed letters
+const showGuesses = function() {
+    lsContainer.innerHTML = '';
+    // for each letter guessed create a list element and store it in the ul
+    guessedLetters.forEach(function (value) {
+        let li = document.createElement('li');
+        li.innerText = value;
+        lsContainer.append(li);
+    })
+}
+// create a function to reveal the letters guessed
+const revealLetters = function (guessedLetters) {
+    // turn the word to upper case
+    const wordUpper = word.toUpperCase();
+    // turn the uppercase word into an array
+    const wordArray = wordUpper.split('');
+    // a blank array to store the placeholders in
+    const match = [];
+    // for of loop to check if the input matches a value in the array of the word
+    for (const letter of wordArray) {
+        if (guessedLetters.includes(letter)) {
+            match.push(letter.toUpperCase());
+        } else {
+            match.push('●');
+        }
+    }
+    // console.log(match);
+    // update the text if theres a matching numbers
+    wordProgress.innerText = match.join('');
+    // call the function to see if the user has won each time they guess a  number
+    checkWinner();
+}
+// function to check if there is a winner
+const checkWinner = function () {
+    // condition to see if the upper case word matches the inner text of the guesses
+    if (word.toUpperCase() === wordProgress.innerText) {
+        letterGuessed.classList.add('win');
+        letterGuessed.innerHTML = `<p class="highlight">You guessed correct the word! Congrats!</p>`;
+    }
+}
