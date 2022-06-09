@@ -6,8 +6,28 @@ const wordProgress = document.querySelector('.word-in-progress');
 const guessRemaining = document.querySelector('span');
 const letterGuessed = document.querySelector('.message');
 const playAgain = document.querySelector('.play-again button');
-const word = 'Magnolia';
+let word = 'magnolia';
 const guessedLetters = [];
+let remainingGuesses = 8;
+
+
+// function to retrieve new word from text file
+const getWord = async function () {
+
+    const wordRequest = await fetch (`https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt`);
+    const newWord = await wordRequest.text();
+    // store and split the words into strings
+    const newWordResult = newWord.split('\n');
+    // select an index at random
+    const randomIndex = Math.floor(Math.random() * newWordResult.length);
+    // update the word at index as the word used in the game
+    word = newWordResult[randomIndex].trim();
+    // call the placeholder function to display new word as defined by random index
+    placeholder(word);
+}
+getWord();
+
+
 
 
 //  ------------------- My Way which broke the code when trying to change the dots for the guesses -------------------
@@ -43,8 +63,7 @@ const placeholder = function (word) {
 
 // --------------------End of Skillcrush way -------------------
 
-// call function with the word as the parameter
-placeholder(word)
+
 
 
 // create event listener for guess! button
@@ -98,6 +117,7 @@ const makeGuess = function (guess) {
         // then push to array if all good
         guessedLetters.push(guess);
         showGuesses();
+        guessesRemaining(guess);
         revealLetters(guessedLetters);
     }
 };
@@ -141,5 +161,30 @@ const checkWinner = function () {
     if (word.toUpperCase() === wordProgress.innerText) {
         letterGuessed.classList.add('win');
         letterGuessed.innerHTML = `<p class="highlight">You guessed correct the word! Congrats!</p>`;
+    }
+}
+
+// create a function to accept guesses remaining
+
+const guessesRemaining = function(guess) {
+    // grab word and make uppercase
+    const newGuess = guess;
+    const guessesUpCase = word.toUpperCase();
+    // conditional statement to see if word contains the guess
+    if (!guessesUpCase.includes(newGuess)) {
+        // if it doesnt, remove a guess and display message
+        remainingGuesses -= 1;
+        console.log(remainingGuesses);
+        letterGuessed.innerText = "This letter is not in the word!"
+    } else {
+        letterGuessed.innerText = "Yay! You guessed right."
+    }
+    // conditional statement to check if guesses remaining is 0, 1 or update the remaining attempts otherwise
+    if (remainingGuesses === 0) {
+        progress.innerText = `Game Over! 0 tries left! The word was ${word}`;
+    } else if(remainingGuesses === 1) {
+        progress.innerText = `Final guess. Make it a good one...`;
+    } else {
+        guessRemaining.innerText = `${remainingGuesses}`;
     }
 }
