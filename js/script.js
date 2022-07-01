@@ -9,7 +9,7 @@ const playAgain = document.querySelector('.play-again');
 const label = document.querySelector('label');
 let word = 'magnolia';
 let guessedLetters = [];
-let remainingGuesses = 2;
+let remainingGuesses = 8;
 
 
 // function to retrieve new word from text file
