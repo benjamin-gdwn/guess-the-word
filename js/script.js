@@ -190,7 +190,7 @@ playAgain.addEventListener('click', function () {
     // reset letterguessed text
     letterGuessed.innerText = '';
     //  reset remaining guesses
-    remainingGuesses = 2;
+    remainingGuesses = 8;
     // reset progress html
     progress.innerHTML = `<p class="remaining">You have <span>2 guesses</span> remaining.</p>`
 
